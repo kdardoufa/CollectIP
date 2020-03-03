@@ -1,0 +1,3 @@
+Collect-IPs
+Copyright (c) 2020 Katerina Dardoufa
+This project includes software developed by Katerina Dardoufa, and is about using Nornir to gather IPs (Address/Subnet Masks) from operating network devices.
