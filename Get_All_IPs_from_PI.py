@@ -119,7 +119,6 @@ def getIPs(Group_List):
     return()
 # End of function
 
-# Main Function
 
 
 def main():
