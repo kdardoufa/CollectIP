@@ -11,7 +11,7 @@ requests.packages.urllib3.disable_warnings()
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S',
                     filename='GetAll_IPs.log', level=logging.INFO)
 
-controller_url = "https://10.130.107.30/webacs/api/v4/data/InventoryDetails/"
+controller_url = "https://ip_address_of_PI/webacs/api/v4/data/InventoryDetails/"
 Group_List = []
 output = []
 intf_list = []
@@ -22,7 +22,7 @@ IP_file = "IP_"+timestr+".csv"
 
 def getDeviceGroups():
     logging.info("Getting all device groups")
-    url = "https://10.130.107.30/webacs/api/v2/data/DeviceGroups.json"
+    url = "https://ip_address_of_PI/webacs/api/v2/data/DeviceGroups.json"
     response = requests.get(url, auth=HTTPBasicAuth("username", "password"), verify=False)
     r_json = response.json()
     Group_List = []
