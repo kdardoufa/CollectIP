@@ -1,0 +1,6 @@
+---
+Test-Router:
+    groups:
+      - routers
+    platform: cisco_xe
+    hostname: 10.10.10.10

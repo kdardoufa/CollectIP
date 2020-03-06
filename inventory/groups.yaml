@@ -1,0 +1,6 @@
+---
+routers:
+  platform: cisco_xe
+
+datacenter_switch:
+  platform: nxos
