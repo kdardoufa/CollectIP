@@ -31,8 +31,9 @@ The script is written in Python 3
 3.	Create the virtual environment in a sub dir in the same directory
  - python3 -m venv venv
 
-4.	Start the virtual environment
+4.	Start the virtual environment and install requirements.txt
  - source venv/bin/activate
+ - pip install -r requirements.txt
 
 5.	Execute the script as any other Python script form console. 
  - python get_All_IPs_from_PI.py
