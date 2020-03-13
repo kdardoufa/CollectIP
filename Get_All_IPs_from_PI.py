@@ -4,14 +4,18 @@ import csv
 import logging
 from requests.auth import HTTPBasicAuth
 import time
-from datetime import datetime
 
 requests.packages.urllib3.disable_warnings()
 
 logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S',
                     filename='GetAll_IPs.log', level=logging.INFO)
 
-controller_url = "https://ip_address_of_PI/webacs/api/v4/data/InventoryDetails/"
+# Define Global Variables
+USERNAME = "username"  # define  REST API username
+PASSWORD = "password"  # define REST API passowrd
+PI_ADDRESS = "ip_address"  # define IP Address of Prime Infrastructure Server
+
+controller_url = "https://"+PI_ADDRESS+"/webacs/api/v4/data/InventoryDetails/"
 Group_List = []
 output = []
 intf_list = []
@@ -22,8 +26,8 @@ IP_file = "IP_"+timestr+".csv"
 
 def getDeviceGroups():
     logging.info("Getting all device groups")
-    url = "https://ip_address_of_PI/webacs/api/v2/data/DeviceGroups.json"
-    response = requests.get(url, auth=HTTPBasicAuth("username", "password"), verify=False)
+    url = "https://"+PI_ADDRESS+"/webacs/api/v2/data/DeviceGroups.json"
+    response = requests.get(url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
     r_json = response.json()
     Group_List = []
     group = "dummy value"
@@ -33,7 +37,7 @@ def getDeviceGroups():
                 new_url = value + ".json"
                 # print(new_url)
                 group_response = requests.get(
-                    new_url, auth=HTTPBasicAuth("username", "password"), verify=False)
+                    new_url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
                 group_json = group_response.json()
                 # print(new_url)
                 dev_dict = group_json["queryResponse"]["entity"][0]
@@ -83,7 +87,7 @@ def getIPs(Group_List):
     while i < NumOfGroups:
         group = Group_List[i]
         url = controller_url + ".json?.group=" + group
-        response = requests.get(url, auth=HTTPBasicAuth("username", "password"), verify=False)
+        response = requests.get(url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
         r_json = response.json()
         count = (r_json.get("queryResponse", "")).get("@count", "")
         if count == 0:
@@ -97,7 +101,7 @@ def getIPs(Group_List):
                     if "https" in value:
                         new_url = value + ".json"
                         device_response = requests.get(new_url, auth=HTTPBasicAuth(
-                            "username", "password"), verify=False)
+                            USERNAME, PASSWORD), verify=False)
                         device_json = device_response.json()
                         if (type(device_json) != str)and(group != "Unsupported Cisco Device"):
                             intf_list = device_json["queryResponse"]["entity"][0].get(
@@ -119,13 +123,16 @@ def getIPs(Group_List):
     return()
 # End of function
 
+# Main Function
 
 
 def main():
     logging.info("Begin")
+    #print("Execution started: ", datetime.now())
     InitialGroups = getDeviceGroups()
     Groups = RemoveGeneric(InitialGroups)
     getIPs(Groups)
+    #print("Execution Ended: ", datetime.now())
     logging.info("End")
     return()
 
