@@ -25,28 +25,19 @@ IP_file = "IP_"+timestr+".csv"
 
 
 def getDeviceGroups():
-    logging.info("Getting all device groups")
-    url = "https://"+PI_ADDRESS+"/webacs/api/v2/data/DeviceGroups.json"
+    logging.info(" - Getting all device groups")
+    url = "https://"+PI_ADDRESS+"/webacs/api/v2/data/DeviceGroups.json?.full=true"
     response = requests.get(url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
     r_json = response.json()
     Group_List = []
     group = "dummy value"
-    for entity in r_json['queryResponse']['entityId']:
-        for value in entity.values():
-            if "https" in value:
-                new_url = value + ".json"
-                # print(new_url)
-                group_response = requests.get(
-                    new_url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
-                group_json = group_response.json()
-                # print(new_url)
-                dev_dict = group_json["queryResponse"]["entity"][0]
-                deviceGroupsDTO = dev_dict.get("deviceGroupsDTO", "None")
-                group = deviceGroupsDTO.get("groupName", "")
-                time.sleep(1)
-                Group_List.append(group)
-                logging.info(f'{group} added to list')
-    logging.info("Initial groups ok... moving on")
+    for entity in r_json['queryResponse']['entity']:
+        group = entity["deviceGroupsDTO"]["groupName"]
+        Group_List.append(group)
+    return(Group_List)
+    Group_List.append(group)
+    logging.info(f' - {group} added to list')
+    logging.info(" - Initial groups ok... moving on")
     return(Group_List)
 # End of Function
 
@@ -67,7 +58,7 @@ def RemoveGeneric(Group_List):
     if "Unsupported Cisco Device" in Group_List:
         Group_List.remove("Unsupported Cisco Device")
     if "Wireless Conteroller" in Group_List:
-        Group_List.remove("Wireless Contorller")
+        Group_List.remove("Wireless Controller")
     if "Cisco 4400 Series Integrated Services Routers" in Group_List:
         Group_List.remove("Cisco 4400 Series Integrated Services Routers")
     new_Group_List = Group_List
@@ -78,46 +69,41 @@ def RemoveGeneric(Group_List):
 
 def getIPs(Group_List):
     logging.info("Getting Device IPs")
-    i = 0
-    NumOfGroups = len(Group_List)
-    # open a file for writing
-    IPList = open(IP_file, 'w')
-    # create the csv writer object
-    csvwriter = csv.writer(IPList)
-    while i < NumOfGroups:
-        group = Group_List[i]
-        url = controller_url + ".json?.group=" + group
+    #i = 0
+    #NumOfGroups = len(Group_List)
+    # while i < NumOfGroups:
+    for group in Group_List:
+        #group = Group_List[i]
+        url = controller_url + ".json?.full=true&.group=" + group + "&.maxResults=1000"
         response = requests.get(url, auth=HTTPBasicAuth(USERNAME, PASSWORD), verify=False)
         r_json = response.json()
         count = (r_json.get("queryResponse", "")).get("@count", "")
-        if count == 0:
-            # Move on to next group
-            i += 1
-            continue
-        else:
+        if count != 0:
             logging.info(f'Getting IPs for devices in group {group}')
-            for entity in r_json['queryResponse']['entityId']:
-                for value in entity.values():
-                    if "https" in value:
-                        new_url = value + ".json"
-                        device_response = requests.get(new_url, auth=HTTPBasicAuth(
-                            USERNAME, PASSWORD), verify=False)
-                        device_json = device_response.json()
-                        if (type(device_json) != str)and(group != "Unsupported Cisco Device"):
-                            intf_list = device_json["queryResponse"]["entity"][0].get(
-                                "inventoryDetailsDTO", "").get("ipInterfaces", "").get("ipInterface", "")
-                            time.sleep(1)
-                            num_of_interfaces = len(intf_list)
-                            j = 0
-                            while j < num_of_interfaces:
-                                ip = intf_list[j].get(
-                                    "ipAddress", "").get("address", "")
-                                mask = intf_list[j].get("prefixLength", "")
-                                ip_and_mask = str(ip) + "/" + str(mask)
-                                output.append(ip_and_mask)
-                                j += 1
-        # Moving on to next Group
-        i += 1
+            if group != "Unsupported Cisco Device":
+                for Info in r_json['queryResponse']['entity']:
+                    intf_list = Info["inventoryDetailsDTO"]["ipInterfaces"]["ipInterface"]
+                    #num_of_interfaces = len(intf_list)
+                    for interface in intf_list:
+                        ip = interface["ipAddress"].get("address", "")
+                        mask = interface.get("prefixLength", "")
+                        ip_and_mask = str(ip) + "/" + str(mask)
+                        output.append(ip_and_mask)
+            else:
+                for Info in r_json['queryResponse']['entity']:
+                    ip = Info["inventoryDetailsDTO"]["summary"]["ipAddress"]
+                    mask = "24"
+                    ip_and_mask = str(ip) + "/" + str(mask)
+                    output.append(ip_and_mask)
+            # Move on to next group
+# If no devices in Group then move on
+        else:
+            continue
+# for loop ends
+# open a file for writing
+    IPList = open(IP_file, 'w')
+# create the csv writer object
+    csvwriter = csv.writer(IPList)
     csvwriter.writerows(zip(output))
     IPList.close()
     return()
