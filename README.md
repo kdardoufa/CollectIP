@@ -39,7 +39,7 @@ The script is written in Python 3
  - python get_All_IPs_from_PI.py
 
 # Known issues
-During the test phase it was noticed that the script would fail, because during the time of execution Prime Infrastructure was busy running other internal procedures or jobs. In order to overcome this a waiting period of 1 second was introduced into some functions (time.sleep(1)). This value can be modified to suit other environments.
+-
 
 # Author(s)
 This project was written and is maintained by the following individuals
