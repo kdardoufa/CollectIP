@@ -17,35 +17,36 @@ The following global variables should be configured by the user, according to th
 - PI_ADDRESS: define IP Address of Prime Infrastructure Server
 
 # Technologies & Frameworks Used
-Prime Infratructure APIs are used.
-NO Third-Party products or Services are used.
-The script is written in Python 3
+* Prime Infratructure APIs are used.
+* NO Third-Party products or Services are used.
+* The script is written in Python 3.
 
 # Installation
 1.	Clone the repo
- - git clone https://github.com/kdardoufa/CollectIP.git
+ * git clone https://github.com/kdardoufa/CollectIP.git
 
 2.	cd into directory
- - cd CollectIP
+ * cd CollectIP
 
 3.	Create the virtual environment in a sub dir in the same directory
- - python3 -m venv venv
+ * python3 -m venv venv
 
 4.	Start the virtual environment and install requirements.txt
- - source venv/bin/activate
- - pip install -r requirements.txt
+ * source venv/bin/activate
+ * pip install -r requirements.txt
 
 5.	Execute the script as any other Python script form console. 
- - python get_All_IPs_from_PI.py
+ * python get_All_IPs_from_PI.py
 
 # Known issues
--
+No issues found.
 
 # Author(s)
 This project was written and is maintained by the following individuals
 - Katerina Dardoufa (kdardoufa@gmail.com)
 
 
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/kdardoufa/CollectIP)
 
 
 
