@@ -31,7 +31,7 @@ parso==0.6.2
 pickleshare==0.7.5
 prompt-toolkit==3.0.3
 pycparser==2.19
-pydantic==0.18.2
+pydantic==1.6.2
 pyeapi==0.8.2
 Pygments==2.5.2
 pyIOSXR==0.53
