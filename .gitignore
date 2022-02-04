@@ -1,0 +1,12 @@
+*.log
+*.csv
+*.txt
+*.yaml
+*.yml
+*.xlsx
+primeapidata.py
+credentials.py
+venv/
+__pycache__/
+.git-credentials
+.vscode/
