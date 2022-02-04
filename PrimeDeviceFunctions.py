@@ -18,10 +18,6 @@ logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:
                     filename='GetAll_IPs.log', level=logging.INFO)
 '''
 
-#timestr = time.strftime("%Y%m%d_%H%M")
-#Device_List = "DeviceList_"+timestr+".csv"
-#IP_file = "IP_"+timestr+".csv"
-
 # Define Global Variables - these should be included in a separate file named primeapaidata.py
 #USERNAME = "username"  # define  REST API username
 #PASSWORD = "password"  # define REST API passowrd
